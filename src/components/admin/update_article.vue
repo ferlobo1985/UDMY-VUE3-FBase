@@ -22,15 +22,36 @@
 
 <script setup>
     import { DB } from '@/firebase/config';
-    import { collection } from 'firebase/firestore'
+    import { doc, getDoc, updateDoc } from 'firebase/firestore'
     import { reactive } from 'vue';
+    import { useRoute } from 'vue-router';
 
+    const route = useRoute();
     const formData = reactive({
         title:'',
         description:''
     });
 
+    /// GET DO BY ID
+    const docRef = doc(DB,'notes',route.params.id);
+    getDoc(docRef)
+    .then( snapshot =>{
+        if(!snapshot.exists()){
+            throw new Error("Could not find note");
+        }
+        formData.title = snapshot.data().title;
+        formData.description = snapshot.data().description
+    }).catch(error=>{
+        console.log(error)
+    })
+
+
     const submitForm = async() => {
-       
+       try {
+            const docRef = doc(DB,'notes',route.params.id);
+            await updateDoc(docRef,{...formData})
+       } catch(error){
+            console.log(error)
+       }
     }
 </script>
