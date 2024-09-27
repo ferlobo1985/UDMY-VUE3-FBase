@@ -4,10 +4,15 @@
     <!-- ITEM -->
     <div class="col" v-for="(notes) in notes" :key="notes.id">
         <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ notes.title }}</h5>
-            <p class="card-text">{{ notes.description }}</p>
-        </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ notes.title }}</h5>
+                <p class="card-text">{{ notes.description }}</p>
+            </div>
+            <div class="card-footer">
+                <router-link :to="`/admin/update_article/${notes.id}`">
+                    Update note
+                </router-link>
+            </div>
         </div>
     </div>
 
