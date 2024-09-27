@@ -16,17 +16,22 @@
                     UPDATE
                 </button>
             </form>
+            <hr/>
+            <button class="btn btn-danger" @click="deleteNote">
+                Delete note
+            </button>
         </div>
     </div>
 </template>
 
 <script setup>
     import { DB } from '@/firebase/config';
-    import { doc, getDoc, updateDoc } from 'firebase/firestore'
+    import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
     import { reactive } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
     const route = useRoute();
+    const router =  useRouter();
     const formData = reactive({
         title:'',
         description:''
@@ -45,7 +50,7 @@
         console.log(error)
     })
 
-
+    // Post update
     const submitForm = async() => {
        try {
             const docRef = doc(DB,'notes',route.params.id);
@@ -54,4 +59,17 @@
             console.log(error)
        }
     }
+
+
+    // delete note
+    const deleteNote = async() => {
+        try{
+            const docRef = doc(DB,'notes',route.params.id);
+            await deleteDoc(docRef);
+            router.push('/')
+        } catch(error){
+            console.log(error)
+        }
+    }
+
 </script>
