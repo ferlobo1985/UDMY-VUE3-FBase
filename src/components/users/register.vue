@@ -23,14 +23,41 @@
 
 
 <script setup>
-  import { reactive } from 'vue';
-  const formData = reactive({
-    email:'',
-    password:''
-  });
+    import { AUTH } from '@/firebase/config';
+    import { createUserWithEmailAndPassword } from 'firebase/auth'
+    import { reactive, ref } from 'vue';
+    import { useRouter } from 'vue-router';
 
-  const submitForm = () => {
-    console.log(formData);
-  }
+    const router = useRouter();
+    const register = ref(true);
+    const formData = reactive({
+        email:'',
+        password:''
+    });
+
+    const submitForm = () => {
+        if(register.value){
+            // register
+            registerUser();
+        } else {
+            // sign in
+        }
+
+    }
+
+    const registerUser = async() => {
+        try{
+            const response = await createUserWithEmailAndPassword(
+                AUTH,formData.email,formData.password
+            ) 
+            if(!response){
+                throw new Error('Sorry, something happened');
+            }
+            router.push('/')
+        } catch(error){
+            console.log(error.message)
+        }
+    }
+
 
 </script>
